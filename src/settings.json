@@ -1,0 +1,10 @@
+{
+  "colorWeek": false,
+  "navbar": true,
+  "menu": true,
+  "footer": true,
+  "themeColor": "#165DFF",
+  "menuWidth": 220,
+  "menuMode": 0,
+  "menuAccordion": false
+}
