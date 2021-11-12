@@ -191,7 +191,7 @@ function SettingRoles() {
     }
   }
   function renderLink(){
-    if (showSelect) {
+    if (!showSelect) {
       return (
         <FormItem
           label={locale['menulist.link']}
@@ -225,6 +225,10 @@ function SettingRoles() {
     {
       title: locale['menulist.sort'],
       dataIndex: 'orderNum',
+    },
+    {
+      title: locale['menulist.link'],
+      dataIndex: 'link',
     },
     {
       title: locale['menu.Operations'],
