@@ -23,6 +23,8 @@ export default function LoginForm() {
     // 请求用户菜单
     const res = await getUserMenu(data.id);
     const { umsRoleMenuVOList } = res.data;
+    console.log(umsRoleMenuVOList);
+    
     if (umsRoleMenuVOList.length != 0) {
       localStorage.setItem('arco-routers', JSON.stringify(umsRoleMenuVOList));
     }

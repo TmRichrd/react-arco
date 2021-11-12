@@ -11,6 +11,7 @@ import {
   Popconfirm,
   Space,
   Select,
+  InputNumber,
 } from '@arco-design/web-react';
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,9 +33,9 @@ function SettingRoles() {
   const locale = useLocale();
   const rolesState = useSelector((state: ReducerState) => state.roles);
   const dispatch = useDispatch();
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [showSelect, setShowSelect] = useState(true);
   const [page, setPage] = useState({ current: 1, size: 10 });
-  const [query, setQuery] = useState({ roleName: null });
+  const [query, setQuery] = useState({ name: '' });
   const [visible, setVisible] = useState(false);
   const [iconvisible, setIconVisible] = useState(false);
   const [icons, setIcons] = useState(<IconSettings />);
@@ -56,8 +57,8 @@ function SettingRoles() {
     },
   };
   function onSearch(keyword) {
-    setQuery({ roleName: keyword });
-    fetchData(page, { roleName: keyword });
+    setQuery({ name: keyword });
+    fetchData(page, { name: keyword });
   }
   function onChangeTable(pagination) {
     const { current, pageSize } = pagination;
@@ -90,23 +91,33 @@ function SettingRoles() {
     setParentMenu(options);
     setVisible(true);
     formRef.current.resetFields();
-    formRef.current.setFieldsValue({ icon: 'IconSettings' });
+    setShowSelect(true);
+    formRef.current.setFieldsValue({ icon: 'IconSettings', parentId: '0' });
   }
   function handleDel(ids: string) {
     menuRemove(ids).finally(() => fetchData(page, query));
   }
+  function handleClear() {
+    fetchData(page, query);
+  }
   async function handleEdit(id: string) {
     setType('edit');
     const res = await menuList({ parentId: '0' });
+
     const options = res.data;
     options.unshift({ id: '0', name: '无' });
     setParentMenu(options);
     menuDetail(id).then((res) => {
+      if (res.data.parentId == '0') setShowSelect(true);
+      setShowSelect(false);
       setType('edit');
       setVisible(true);
       formRef.current.setFieldsValue(res.data);
       setId(res.data.id);
     });
+  }
+  function handleChangeParent(e) {
+    e == '0' ? setShowSelect(true) : setShowSelect(false);
   }
   function add(value) {
     menuAdd(value)
@@ -159,6 +170,27 @@ function SettingRoles() {
     });
   }
 
+  function renderSelect() {
+    if (showSelect) {
+      return (
+        <FormItem
+          label={locale['menulist.icon']}
+          required
+          field="icon"
+          rules={[{ required: true }]}
+        >
+          <Input
+            placeholder=""
+            autoComplete="off"
+            onClick={() => handleChangeIcon()}
+            readOnly
+            addAfter={icons}
+          />
+        </FormItem>
+      );
+    }
+  }
+
   const columns = [
     {
       title: locale['menulist.name'],
@@ -172,6 +204,10 @@ function SettingRoles() {
     {
       title: locale['menulist.alias'],
       dataIndex: 'router',
+    },
+    {
+      title: locale['menulist.sort'],
+      dataIndex: 'orderNum',
     },
     {
       title: locale['menu.Operations'],
@@ -219,6 +255,7 @@ function SettingRoles() {
   }, []);
   useEffect(() => {}, [parentMenu]);
   useEffect(() => {}, [icons]);
+  useEffect(() => {}, [showSelect]);
   return (
     <div className={style.container}>
       <Breadcrumb style={{ marginBottom: 20 }}>
@@ -236,6 +273,8 @@ function SettingRoles() {
           </div>
           <div>
             <Input.Search
+              onClear={handleClear}
+              allowClear
               style={{ width: 300, marginRight: 20 }}
               searchButton
               placeholder={locale['menulist.placeholder.name']}
@@ -251,12 +290,6 @@ function SettingRoles() {
           pagination={pagination}
           columns={columns}
           data={data}
-          rowSelection={{
-            selectedRowKeys,
-            onChange: (selectedRowKeys) => {
-              setSelectedRowKeys(selectedRowKeys);
-            },
-          }}
         />
       </Card>
 
@@ -270,8 +303,12 @@ function SettingRoles() {
         confirmLoading={confirmLoading}
       >
         <Form {...formItemLayout} ref={formRef}>
-          <FormItem label={locale['menulist.superior']} field="parentId">
-            <Select allowClear>
+          <FormItem
+            label={locale['menulist.superior']}
+            field="parentId"
+            rules={[{ required: true }]}
+          >
+            <Select allowClear onChange={handleChangeParent}>
               {parentMenu.map((option) => (
                 <Option key={option.id} value={option.id}>
                   {option.name}
@@ -282,11 +319,11 @@ function SettingRoles() {
           <FormItem
             label={locale['menulist.name']}
             field="name"
-            rules={[{ required: true, message: '请输入菜单名称' }]}
+            rules={[{ required: true, message: locale['menu.please'] + locale['menulist.name'] }]}
           >
             <Input placeholder="" autoComplete="off" />
           </FormItem>
-          <FormItem
+          {/* <FormItem
             label={locale['menulist.icon']}
             required
             field="icon"
@@ -299,12 +336,21 @@ function SettingRoles() {
               readOnly
               addAfter={icons}
             />
+          </FormItem> */}
+          {renderSelect()}
+          <FormItem
+            label={locale['menulist.sort']}
+            required
+            field="orderNum"
+            rules={[{ required: true }]}
+          >
+            <InputNumber placeholder="" min={1} />
           </FormItem>
           <FormItem
             label={locale['menulist.alias']}
             required
             field="router"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: locale['menu.please'] + locale['menulist.alias'] }]}
           >
             <Input placeholder="" disabled={type == 'edit'} autoComplete="off" />
           </FormItem>

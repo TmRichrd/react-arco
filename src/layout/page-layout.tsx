@@ -54,9 +54,9 @@ function FormatMenu(menu) {
         m.icon = React.createElement(IconList[m.icon])
         m.children = m.children
       } else if (m.parentId !== '0') {
-        m.key = 'setting/'+m.router;
-        m.name = `menu.setting.${m.router}`;
-        m.componentPath = `setting-${m.router}`;
+        m.key =m.parentRouter +'/'+m.router;
+        m.name = `menu.${m.parentRouter}.${m.router}`;
+        m.componentPath = `${m.parentRouter}-${m.router}`;
         m.icon=''
       }
       if (isArray(m.children) && m.children.length) {

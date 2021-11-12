@@ -36,6 +36,7 @@ export default {
   'menu.Operations':"Operations",
   "menu.deletetip":"Are you sure to delete?",
   "menu.Creator":"Create user",
+  "menu.please":"Please enter ",
   ...localeSettings,
   ...localeMessageBox,
   ...localeWorkplace,

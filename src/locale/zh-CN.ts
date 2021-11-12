@@ -36,6 +36,7 @@ export default {
   'menu.Operations':"操作",
   "menu.deletetip":"是否确认删除?",
   "menu.Creator":"创建人",
+  "menu.please":"请输入",
   ...localeSettings,
   ...localeMessageBox,
   ...localeWorkplace,

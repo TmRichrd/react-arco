@@ -1,50 +1,135 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Breadcrumb, Card } from '@arco-design/web-react';
+import { Table, Button, Input, Breadcrumb, Card, Avatar, Tag } from '@arco-design/web-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { IconMan, IconPlus, IconRefresh, IconWoman } from '@arco-design/web-react/icon';
 import useLocale from '../../utils/useLocale';
 import style from './style/index.module.less';
 import { ReducerState } from '../../redux';
-import { useDispatch, useSelector } from 'react-redux';
-import { IconRefresh } from '@arco-design/web-react/icon';
-// import axios from 'axios';
 import {
   UPDATE_FORM_PARAMS,
   UPDATE_LIST,
   UPDATE_LOADING,
   UPDATE_PAGINATION,
 } from './redux/actionTypes';
+
+import { userPage } from './api';
+
 function SettingRoles() {
   const locale = useLocale();
   const rolesState = useSelector((state: ReducerState) => state.roles);
   const dispatch = useDispatch();
+  const [page, setPage] = useState({ current: 1, size: 10 });
+  const [query, setQuery] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  // const [type, setType] = useState('checkbox');
   const { data, pagination, loading } = rolesState;
   function onSearch(keyword) {
-    console.log('🚀 ~ file: index.tsx ~ line 16 ~ onSearch ~ keyword', keyword);
+    fetchData(page, query);
   }
   function onChangeTable(pagination) {
     const { current, pageSize } = pagination;
-    console.log(current, pageSize);
+    setPage({ current, size: pageSize });
+    fetchData({ current, size: pageSize }, query);
+  }
+  function renderAvatar(record) {
+    if (record.headPortrait) {
+      return (
+        <Avatar size={64} shape="square">
+          <img src={record.headPortrait} alt="" />
+        </Avatar>
+      );
+    }
+    return (
+      <Avatar size={64} shape="square">
+        {record.realName}
+      </Avatar>
+    );
+  }
+
+  function renderGender(record) {
+    if (record.sex == '0') {
+      return (
+        <Tag color="orangered" icon={<IconMan/>} size="medium">
+          男
+        </Tag>
+      );
+    }
+    if (record.sex == '1') {
+      return (
+        <Tag color="blue" size="medium" icon={<IconWoman/>}>
+          女
+        </Tag>
+      );
+    }
   }
 
   const columns = [
     {
-      title: '角色名称',
-      dataIndex: 'name',
+      title: locale['user.nickname'],
+      dataIndex: 'nickname',
+    },
+    {
+      title: locale['user.realname'],
+      dataIndex: 'realName',
+    },
+    {
+      title: locale['user.gender'],
+      dataIndex: 'sex',
+      render: (_col, record) => renderGender(record),
+    },
+    {
+      title: locale['user.status'],
+      dataIndex: 'status',
+    },
+    {
+      title: locale['user.avatar'],
+      dataIndex: 'headPortrait',
+      render: (_col, record) => renderAvatar(record),
+    },
+    {
+      title: locale['user.addr'],
+      dataIndex: 'addr',
+    },
+    {
+      title: locale['user.createuser'],
+      dataIndex: 'createUserName',
+    },
+    {
+      title: locale['user.createtime'],
+      dataIndex: 'createTime',
+    },
+    {
+      title: locale['menu.Operations'],
+      dataIndex: 'operations',
+      render: (_col, record) => (
+        <div>
+          <Button type="text">{locale['menu.view']}</Button>
+        </div>
+      ),
     },
   ];
-  function fetchData(current = 1, pageSize = 10, params = {}) {
-    dispatch({ type: UPDATE_LIST, payload: { data: [{ id: '1', name: '管理员' }] } });
-    dispatch({
-      type: UPDATE_PAGINATION,
-      payload: { pagination: { ...pagination, current, pageSize, total: 1 } },
+  function fetchData(page, params = {}) {
+    userPage(page.current, page.size, params).then((res) => {
+      dispatch({ type: UPDATE_LIST, payload: { data: res.data.records } });
+      dispatch({
+        type: UPDATE_PAGINATION,
+        payload: {
+          pagination: {
+            ...pagination,
+            current: page.current,
+            pageSize: page.size,
+            total: res.data.total,
+          },
+        },
+      });
+      dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
+      dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
     });
-    dispatch({ type: UPDATE_LOADING, payload: { loading: false } });
-    dispatch({ type: UPDATE_FORM_PARAMS, payload: { params } });
   }
   useEffect(() => {
-    fetchData();
+    fetchData(page, query);
   }, []);
+  useEffect(() => {}, [page]);
+  useEffect(() => {}, [query]);
   return (
     <div className={style.container}>
       <Breadcrumb style={{ marginBottom: 20 }}>
@@ -54,16 +139,16 @@ function SettingRoles() {
       <Card bordered={false}>
         <div className={style.toolbar}>
           <div>
-            <Button type="primary">{locale['menu.add']}</Button>
+            <Button type="primary" icon={<IconPlus/>}>{locale['menu.add']}</Button>
           </div>
           <div>
             <Input.Search
               style={{ width: 300, marginRight: 20 }}
               searchButton
-              placeholder={locale['roles.placeholder.roles']}
+              placeholder={locale['user.placeholder.roles']}
               onSearch={onSearch}
             />
-            <Button icon={<IconRefresh />}></Button>
+            <Button icon={<IconRefresh />} />
           </div>
         </div>
         <Table

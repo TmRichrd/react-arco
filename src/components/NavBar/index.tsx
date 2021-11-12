@@ -41,7 +41,7 @@ function Navbar() {
         <Space size={8}>
           <Logo />
           <Typography.Title style={{ margin: 0, fontSize: 18 }} heading={5}>
-            Arco Design Pro
+            湖南世阳智能科技有限公司
           </Typography.Title>
         </Space>
       </div>

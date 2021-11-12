@@ -46,3 +46,10 @@ export const rolesUpdate = (data) => {
     data
   })
 }
+export const rolesTree = (roleId:string)=>{
+  return request({
+    url:"/ums/role-menu/tree",
+    method:"get",
+    params:{roleId}
+  })
+}

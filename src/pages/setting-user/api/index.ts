@@ -1,7 +1,7 @@
 import request from "../../../utils/request";
-export const rolesPage = (current, size, params) => {
+export const userPage = (current, size, params) => {
   return request({
-    url: `/ums/role/custom-page`,
+    url: `/ums/user/custom-page`,
     method: "get",
     params: {
       ...params,
@@ -11,37 +11,37 @@ export const rolesPage = (current, size, params) => {
   })
 }
 
-export const rolesList = () => {
+export const userList = () => {
   return request({
-    url: `/ums/role/list`,
+    url: `/ums/user/list`,
     method: "get",
   })
 }
 
-export const rolesAdd = (data) => {
+export const userAdd = (data) => {
   return request({
-    url: "/ums/role/save",
+    url: "/ums/user/save",
     method: "post",
     data
   })
 }
-export const rolesRemove = (ids) => {
+export const userRemove = (ids) => {
   return request({
-    url: "/ums/role/remove",
+    url: "/ums/user/remove",
     method: "post",
     params: { ids }
   })
 }
-export const rolesDetail = (id) => {
+export const userDetail = (id) => {
   return request({
-    url: "/ums/role/detail",
+    url: "/ums/user/detail",
     method: "get",
     params: { id }
   })
 }
-export const rolesUpdate = (data) => {
+export const userUpdate = (data) => {
   return request({
-    url: "/ums/role/update",
+    url: "/ums/user/update",
     method: "post",
     data
   })
