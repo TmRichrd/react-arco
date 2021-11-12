@@ -6,5 +6,6 @@ export default {
   "menulist.placeholder.name":"Please enter menu name",
   "menulist.superior":"Superior menu",
   "menulist.changeIcon":"Change Icon",
-  "menulist.sort":"Sort"
+  "menulist.sort":"Sort",
+  "menulist.link":"Link"
 }

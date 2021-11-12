@@ -190,6 +190,23 @@ function SettingRoles() {
       );
     }
   }
+  function renderLink(){
+    if (showSelect) {
+      return (
+        <FormItem
+          label={locale['menulist.link']}
+          required
+          field="link"
+          rules={[{ required: true }]}
+        >
+          <Input
+            placeholder=""
+            autoComplete="off"
+          />
+        </FormItem>
+      );
+    }
+  }
 
   const columns = [
     {
@@ -338,6 +355,7 @@ function SettingRoles() {
             />
           </FormItem> */}
           {renderSelect()}
+          {renderLink()}
           <FormItem
             label={locale['menulist.sort']}
             required

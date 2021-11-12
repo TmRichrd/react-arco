@@ -6,5 +6,6 @@ export default {
   "menulist.placeholder.name":"请输入菜单名称",
   "menulist.superior":"上级菜单",
   "menulist.changeIcon":"选择图标",
-  "menulist.sort":"排序"
+  "menulist.sort":"排序",
+  "menulist.link":"页面路径"
 }

@@ -56,7 +56,7 @@ function FormatMenu(menu) {
       } else if (m.parentId !== '0') {
         m.key =m.parentRouter +'/'+m.router;
         m.name = `menu.${m.parentRouter}.${m.router}`;
-        m.componentPath = `${m.parentRouter}-${m.router}`;
+        m.componentPath = `${m.link}`;
         m.icon=''
       }
       if (isArray(m.children) && m.children.length) {
