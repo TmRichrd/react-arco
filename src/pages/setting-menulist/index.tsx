@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Table,
   Button,
@@ -14,7 +14,7 @@ import {
 } from '@arco-design/web-react';
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconRefresh,IconSettings } from '@arco-design/web-react/icon';
+import { IconRefresh, IconSettings } from '@arco-design/web-react/icon';
 import * as IconList from '@arco-design/web-react/icon/index.js';
 import useLocale from '../../utils/useLocale';
 import style from './style/index.module.less';
@@ -37,12 +37,13 @@ function SettingRoles() {
   const [query, setQuery] = useState({ roleName: null });
   const [visible, setVisible] = useState(false);
   const [iconvisible, setIconVisible] = useState(false);
+  const [icons, setIcons] = useState(<IconSettings />);
   const [id, setId] = useState(null);
   const [type, setType] = useState('add');
   const [confirmLoading, setConfirmLoading] = useState(false);
   const FormItem = Form.Item;
   const formRef = useRef<FormInstance>();
-  const MenuIconRef  = useRef()
+  const MenuIconRef: any = useRef();
   const Option = Select.Option;
   const [parentMenu, setParentMenu] = useState([]);
   const { data, pagination, loading } = rolesState;
@@ -68,20 +69,38 @@ function SettingRoles() {
     fetchData(page, query);
   }
 
+  const handleGetIcon = useCallback(() => {
+    formRef.current.setFieldsValue({ icon: MenuIconRef.current.icon });
+    setIconVisible(false);
+    setIcons(React.createElement(IconList[MenuIconRef.current.icon]));
+  }, []);
+
+  function handleCancel() {
+    setVisible(false);
+    formRef.current.setFieldsValue({ icon: 'IconSettings' });
+    formRef.current.resetFields();
+    setIcons(<IconSettings />);
+  }
+
   async function handleAdd() {
-    setVisible(true);
-    // 请求父级
+    setType('add');
     const res = await menuList({ parentId: '0' });
     const options = res.data;
     options.unshift({ id: '0', name: '无' });
     setParentMenu(options);
     setVisible(true);
-    formRef.current.setFieldsValue({icon:"IconSetting"})
+    formRef.current.resetFields();
+    formRef.current.setFieldsValue({ icon: 'IconSettings' });
   }
   function handleDel(ids: string) {
     menuRemove(ids).finally(() => fetchData(page, query));
   }
-  function handleEdit(id: string) {
+  async function handleEdit(id: string) {
+    setType('edit');
+    const res = await menuList({ parentId: '0' });
+    const options = res.data;
+    options.unshift({ id: '0', name: '无' });
+    setParentMenu(options);
     menuDetail(id).then((res) => {
       setType('edit');
       setVisible(true);
@@ -90,18 +109,21 @@ function SettingRoles() {
     });
   }
   function add(value) {
-    menuAdd(value).then((res) => {
-      if (res.code == 200) {
-        Message.success(res.message);
-        setVisible(false);
+    menuAdd(value)
+      .then((res) => {
+        if (res.code == 200) {
+          Message.success(res.message);
+          setVisible(false);
+          formRef.current.resetFields();
+          fetchData(page, query);
+        } else {
+          Message.error(res.message);
+        }
+      })
+      .finally(() => {
         setConfirmLoading(false);
-        formRef.current.resetFields();
-        fetchData(page, query);
-      } else {
-        setConfirmLoading(false);
-        Message.error(res.message);
-      }
-    });
+        setId(null);
+      });
   }
 
   function renderIcon(value) {
@@ -109,18 +131,21 @@ function SettingRoles() {
   }
 
   function edit(value) {
-    menuUpdate({ id, ...value }).then((res) => {
-      if (res.code == 200) {
-        Message.success(res.message);
-        setVisible(false);
+    menuUpdate({ id, ...value })
+      .then((res) => {
+        if (res.code == 200) {
+          Message.success(res.message);
+          setVisible(false);
+          formRef.current.resetFields();
+          fetchData(page, query);
+        } else {
+          Message.error(res.message);
+        }
+      })
+      .finally(() => {
         setConfirmLoading(false);
-        formRef.current.resetFields();
-        fetchData(page, query);
-      } else {
-        setConfirmLoading(false);
-        Message.error(res.message);
-      }
-    });
+        setId(null);
+      });
   }
 
   function onOk() {
@@ -168,8 +193,8 @@ function SettingRoles() {
       ),
     },
   ];
-  function handleChangeIcon(){
-    setIconVisible(true)
+  function handleChangeIcon() {
+    setIconVisible(true);
   }
   function fetchData(page, params = {}) {
     menuPage(page.current, page.size, params).then((res) => {
@@ -192,9 +217,8 @@ function SettingRoles() {
   useEffect(() => {
     fetchData(page, query);
   }, []);
-  useEffect(() => {
-    console.log(parentMenu);
-  }, [parentMenu]);
+  useEffect(() => {}, [parentMenu]);
+  useEffect(() => {}, [icons]);
   return (
     <div className={style.container}>
       <Breadcrumb style={{ marginBottom: 20 }}>
@@ -240,7 +264,7 @@ function SettingRoles() {
         title={locale[`menu.${type}`]}
         visible={visible}
         onOk={onOk}
-        onCancel={() => setVisible(false)}
+        onCancel={() => handleCancel()}
         autoFocus={false}
         focusLock
         confirmLoading={confirmLoading}
@@ -255,7 +279,11 @@ function SettingRoles() {
               ))}
             </Select>
           </FormItem>
-          <FormItem label={locale['menulist.name']} field="name" rules={[{ required: true }]}>
+          <FormItem
+            label={locale['menulist.name']}
+            field="name"
+            rules={[{ required: true, message: '请输入菜单名称' }]}
+          >
             <Input placeholder="" autoComplete="off" />
           </FormItem>
           <FormItem
@@ -264,7 +292,13 @@ function SettingRoles() {
             field="icon"
             rules={[{ required: true }]}
           >
-            <Input placeholder="" autoComplete="off" onClick={()=>handleChangeIcon()} readOnly addAfter={<IconSettings />}/>
+            <Input
+              placeholder=""
+              autoComplete="off"
+              onClick={() => handleChangeIcon()}
+              readOnly
+              addAfter={icons}
+            />
           </FormItem>
           <FormItem
             label={locale['menulist.alias']}
@@ -272,12 +306,18 @@ function SettingRoles() {
             field="router"
             rules={[{ required: true }]}
           >
-            <Input placeholder="" autoComplete="off"/>
+            <Input placeholder="" disabled={type == 'edit'} autoComplete="off" />
           </FormItem>
         </Form>
       </Modal>
-      <Modal style={{width:"70%"}} title={locale['menulist.changeIcon']} visible={iconvisible} onCancel={() => setIconVisible(false)}>
-                <MenuIcon MenuIconRef={MenuIconRef}/>
+      <Modal
+        style={{ width: '70%' }}
+        onOk={handleGetIcon}
+        title={locale['menulist.changeIcon']}
+        visible={iconvisible}
+        onCancel={() => setIconVisible(false)}
+      >
+        <MenuIcon ref={MenuIconRef} />
       </Modal>
     </div>
   );

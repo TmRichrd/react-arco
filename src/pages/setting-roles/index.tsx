@@ -63,6 +63,7 @@ function SettingRoles() {
   }
 
   function handleAdd() {
+    setType('add')
     setVisible(true);
   }
   function handleDel(ids: string) {

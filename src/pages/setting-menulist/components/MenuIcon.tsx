@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle, useEffect, forwardRef } from 'react';
 import * as IconList from '@arco-design/web-react/icon/index.js';
 import { Button } from '@arco-design/web-react';
 import styles from '../style/index.module.less';
 
-function MenuIcon({ MenuIconRef }) {
+let MenuIcon = (_props,ref) => {
+  // 抛出方法
   const [icon, setIcon] = useState(null);
+  useImperativeHandle(ref,()=>({
+    icon
+  }))
   const [currentIndex, setCurrentIndex] = useState(-1);
   const res = [];
   Object.keys(IconList).map((key) => {
@@ -13,9 +17,13 @@ function MenuIcon({ MenuIconRef }) {
     };
     res.push(menu);
   });
-  function handleSelect(icon, index) {
+  function handleSelect(icons, index) {
     setCurrentIndex(index);
+    setIcon(icons.type.displayName);
   }
+  useEffect(() => {
+    console.log(icon);
+  }, [icon]);
   return (
     <div className={styles.iconlist}>
       {res.map((item, index) => {
@@ -24,7 +32,6 @@ function MenuIcon({ MenuIconRef }) {
             <Button
               type={currentIndex == index ? 'primary' : 'default'}
               icon={item.icon}
-              data-icon={item.icon}
               size="large"
               onClick={() => handleSelect(item.icon, index)}
             />
@@ -33,5 +40,5 @@ function MenuIcon({ MenuIconRef }) {
       })}
     </div>
   );
-}
-export default MenuIcon;
+};
+export default MenuIcon = forwardRef(MenuIcon);
