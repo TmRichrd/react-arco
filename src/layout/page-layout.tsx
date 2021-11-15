@@ -19,6 +19,7 @@ import { ReducerState } from '../redux';
 import getUrlParams from '../utils/getUrlParams';
 import lazyload from '../utils/lazyload';
 import styles from './style/layout.module.less';
+import HeaderTags from './header-tags';
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -227,7 +228,7 @@ function PageLayout() {
         <Layout id={'arco-layout'} className={styles.layoutContent} style={paddingStyle}>
           <Content>
             {/* tag导航 */}
-
+            <HeaderTags/>
             <Switch>
               {flattenRoutes.map((route, index) => {
                 return <Route key={index} path={`/${route.key}`} component={route.component} />;

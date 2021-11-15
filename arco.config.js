@@ -1,3 +1,4 @@
+const path = require('path')
 module.exports = {
   // globs to your packages
   // e.g. [ 'packages/*' ]
@@ -5,7 +6,7 @@ module.exports = {
   // command you want to replace 'arco subCommand'
   // e.g. publish: 'lerna publish'
   alias: {
-    publish: '',
+    publish: ''
   },
   // initial meta for 'arco generate'
   initialMeta: {

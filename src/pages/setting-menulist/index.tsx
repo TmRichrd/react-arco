@@ -11,8 +11,7 @@ import {
   Popconfirm,
   Space,
   Select,
-  InputNumber,
-  Switch,
+  InputNumber
 } from '@arco-design/web-react';
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -140,16 +139,6 @@ function SettingRoles() {
 
   function renderIcon(value) {
     return value.icon ? React.createElement(IconList[value.icon]) : <span />;
-  }
-  function renderSwitch(hideStatus: number) {
-    return (
-      <Switch
-        type="round"
-        checkedIcon={<IconList.IconCheck />}
-        uncheckedIcon={<IconList.IconClose />}
-        checked={hideStatus == 1}
-      />
-    );
   }
 
   function edit(value) {

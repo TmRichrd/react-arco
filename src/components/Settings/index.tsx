@@ -47,7 +47,7 @@ function Setting() {
           options={[
             { name: 'settings.vertical', value: 0 },
             { name: 'settings.pop', value: 1 },
-            { name: 'settings.popButton', value: 2 },
+            // { name: 'settings.popButton', value: 2 },
           ]}
         />
         <Block
