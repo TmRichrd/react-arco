@@ -1,6 +1,7 @@
 export default {
   'menu.setting.user':"User",
   "user.placeholder.roles":"Please enter user name",
+  "user.username": "UserName",
   "user.nickname":"NickName",
   "user.realname":"RealName",
   "user.gender":"Gender",
@@ -9,4 +10,12 @@ export default {
   "user.avatar":"Avatar",
   "user.addr":"Address",
   "user.createuser":"Create User",
+  "user.permission":"Roles Configuration",
+  "user.phone":"Phone",
+  "user.password":"Password",
+  "user.phone.validate":"Please enter your mobile phone number",
+  "user.configtip":"Please select at least one user",
+  "user.configlength":"At most one user can be selected",
+  "user.permissionlist":"Roles List",
+  "user.changeroles":"Please select a role"
 }

@@ -65,7 +65,6 @@ function FormatMenu(menu) {
     });
   }
   travelMenu(menu);
-  console.log("🚀 ~ file: page-layout.tsx ~ line 68 ~ FormatMenu ~ menu", menu);
   const routerMenuArr = routers.concat(menu)
   return routerMenuArr
   //路由标准结构
@@ -98,7 +97,7 @@ function renderRoutes(locale) {
         route.component &&
         (!isArray(route.children) || (isArray(route.children) && !route.children.length))
       ) {
-        if (level > 1) {
+        if (level > 1 && !route.hidden) {
           return <MenuItem key={route.key}>{titleDom}</MenuItem>;
         }
         if (!route.hidden) {
@@ -117,11 +116,13 @@ function renderRoutes(locale) {
             </SubMenu>
           );
         }
-        nodes.push(
-          <SubMenu key={route.key} title={titleDom}>
-            {travel(route.children, level + 1)}
-          </SubMenu>
-        );
+        if(!route.hidden){
+          nodes.push(
+            <SubMenu key={route.key} title={titleDom}>
+              {travel(route.children, level + 1)}
+            </SubMenu>
+          );
+        }
       }
     });
   }

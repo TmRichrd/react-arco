@@ -1,14 +1,17 @@
+// import React from 'react';
+// import {
+//   IconDashboard,
+//   IconList,
+//   IconCheckCircle,
+//   IconExclamationCircle,
+//   IconSettings,
+//   IconFile,
+//   IconApps,
+//   IconUser,
+// } from '@arco-design/web-react/icon';
+
+import { IconUser } from '@arco-design/web-react/icon';
 import React from 'react';
-import {
-  IconDashboard,
-  IconList,
-  IconCheckCircle,
-  IconExclamationCircle,
-  IconSettings,
-  IconFile,
-  IconApps,
-  IconUser,
-} from '@arco-design/web-react/icon';
 
 export const defaultRoute = 'dashboard/workplace';
 
@@ -132,23 +135,26 @@ export const routers = [
   //     },
   //   ],
   // },
-  // {
-  //   name: 'menu.user',
-  //   key: 'user',
-  //   icon: <IconUser />,
-  //   children: [
-  //     {
-  //       name: 'menu.user.info',
-  //       key: 'user/info',
-  //       componentPath: 'user-info',
-  //     },
-  //     {
-  //       name: 'menu.user.setting',
-  //       key: 'user/setting',
-  //       componentPath: 'user-setting',
-  //     },
-  //   ],
-  // },
+  {
+    name: 'menu.user',
+    key: 'user',
+    hidden: true,
+    icon: <IconUser />,
+    children: [
+      {
+        name: 'menu.user.info',
+        key: 'user/info',
+        hidden: true,
+        componentPath: 'user-info',
+      },
+      {
+        name: 'menu.user.setting',
+        key: 'user/setting',
+        hidden: true,
+        componentPath: 'user-setting',
+      },
+    ],
+  },
   // {
   //   name:"menu.setting",
   //   key:"setting",

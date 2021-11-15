@@ -53,3 +53,17 @@ export const rolesTree = (roleId:string)=>{
     params:{roleId}
   })
 }
+export const rolesByUser = (userId:string)=>{
+  return request({
+    url:"/ums/user-role/list",
+    method:"get",
+    params:{userId}
+  })
+}
+export const rolesSubmit = (data)=>{
+  return request({
+    url:"/ums/user-role/submit",
+    method:"post",
+    data
+  })
+}

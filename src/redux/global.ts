@@ -21,6 +21,7 @@ export interface GlobalState {
   token?: string,
   routes?: [],
   userInfo?: {
+    id?:string,
     name?: string;
     nickname?: string;
     realName?: string;

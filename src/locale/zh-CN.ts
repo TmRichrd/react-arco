@@ -37,6 +37,8 @@ export default {
   "menu.deletetip":"是否确认删除?",
   "menu.Creator":"创建人",
   "menu.please":"请输入",
+  "menu.man":"男",
+  "menu.woman":"女",
   ...localeSettings,
   ...localeMessageBox,
   ...localeWorkplace,

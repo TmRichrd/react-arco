@@ -37,6 +37,8 @@ export default {
   "menu.deletetip":"Are you sure to delete?",
   "menu.Creator":"Create user",
   "menu.please":"Please enter ",
+  "menu.man":"man",
+  "menu.woman":"woman",
   ...localeSettings,
   ...localeMessageBox,
   ...localeWorkplace,

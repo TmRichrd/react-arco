@@ -7,5 +7,6 @@ export default {
   "menulist.superior":"Superior menu",
   "menulist.changeIcon":"Change Icon",
   "menulist.sort":"Sort",
-  "menulist.link":"Link"
+  "menulist.link":"Link",
+  "menulist.show":"Show"
 }

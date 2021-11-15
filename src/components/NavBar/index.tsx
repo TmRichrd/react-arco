@@ -35,6 +35,20 @@ function Navbar() {
       logout();
     }
   }
+  function renderAvatar() {
+    if (userInfo.headPortrait) {
+      return (
+        <Avatar size={24} style={{ marginRight: 8 }}>
+          <img alt="avatar" src={userInfo.headPortrait} />
+        </Avatar>
+      );
+    }
+    return (
+      <Avatar size={24} style={{ marginRight: 8 }}>
+        {userInfo.nickname}
+      </Avatar>
+    );
+  }
   return (
     <div className={styles.navbar}>
       <div className={styles.left}>
@@ -91,9 +105,7 @@ function Navbar() {
         </li>
         {userInfo && (
           <li>
-            <Avatar size={24} style={{ marginRight: 8 }}>
-              <img alt="avatar" src={userInfo.headPortrait} />
-            </Avatar>
+            {renderAvatar()}
             <Dropdown
               trigger="click"
               droplist={
@@ -105,7 +117,7 @@ function Navbar() {
                 </Menu>
               }
             >
-              <Typography.Text className={styles.username}>{userInfo.realName}</Typography.Text>
+              <Typography.Text className={styles.username}>{userInfo.nickname}</Typography.Text>
             </Dropdown>
           </li>
         )}

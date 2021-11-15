@@ -52,13 +52,13 @@ export default function Info() {
 
   function setInitialValue(values) {
     if (values) {
-      setAvatar(values.avatar);
+      setAvatar(values.headPortrait);
       formRef.current.setFieldsValue({
         ...values,
-        avatar: [
+        headPortrait: [
           {
             uid: 1,
-            url: values.avatar,
+            url: values.headPortrait,
           },
         ],
       });
@@ -67,7 +67,7 @@ export default function Info() {
 
   useEffect(() => {
     if (userInfo) {
-      setAvatar(userInfo.avatar);
+      setAvatar(userInfo.headPortrait);
       setInitialValue(userInfo);
     }
   }, [userInfo]);
@@ -89,12 +89,12 @@ export default function Info() {
       >
         <Upload showUploadList={false} onChange={onAvatarChange}>
           <Avatar size={64} triggerIcon={<IconCamera />} className={styles['info-avatar']}>
-            {avatar ? <img src={avatar} /> : <IconPlus />}
+            {userInfo.headPortrait ? <img src={userInfo.headPortrait} /> : <IconPlus />}
           </Avatar>
         </Upload>
       </Form.Item>
       <Form.Item label={locale['userSetting.label.name']} field="name" rules={[{ required: true }]}>
-        <Input />
+        <Input autoComplete="off"/>
       </Form.Item>
       <Form.Item
         label={locale['userSetting.label.location']}

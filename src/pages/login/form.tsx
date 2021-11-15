@@ -2,10 +2,11 @@ import { Form, Input, Checkbox, Link, Button, Space, Message } from '@arco-desig
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import { IconLock, IconUser } from '@arco-design/web-react/icon';
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import styles from './style/index.module.less';
 import history from '../../history';
 import { getUserMenu, loginByAccount } from '../../api';
-import { useDispatch } from 'react-redux';
+
 export default function LoginForm() {
   const dispatch = useDispatch();
   const formRef = useRef<FormInstance>();
@@ -24,9 +25,11 @@ export default function LoginForm() {
     const res = await getUserMenu(data.id);
     const { umsRoleMenuVOList } = res.data;
     console.log(umsRoleMenuVOList);
-    
-    if (umsRoleMenuVOList.length != 0) {
+
+    if (umsRoleMenuVOList && umsRoleMenuVOList.length != 0) {
       localStorage.setItem('arco-routers', JSON.stringify(umsRoleMenuVOList));
+    } else {
+      return Message.error('该用户暂无权限');
     }
 
     dispatch({ type: 'update-userInfo', payload: { userInfo: data } });
@@ -95,19 +98,19 @@ export default function LoginForm() {
       <div className={styles['login-form-title']}>登录 Arco Design Pro</div>
       <div className={styles['login-form-sub-title']}>登录 Arco Design Pro</div>
       <div className={styles['login-form-error-msg']}>{errorMessage}</div>
-      <Form size={'large'} className={styles['login-form']} layout="vertical" ref={formRef}>
+      <Form size="large" className={styles['login-form']} layout="vertical" ref={formRef}>
         <Form.Item field="account" rules={[{ required: true, message: '用户名不能为空' }]}>
           <Input
             prefix={<IconUser />}
-            placeholder="用户名"
-            autoComplete={'off'}
+            placeholder="用户名或手机号"
+            autoComplete="off"
             onPressEnter={onSubmitClick}
           />
         </Form.Item>
         <Form.Item field="password" rules={[{ required: true, message: '密码不能为空' }]}>
           <Input.Password
             placeholder="密码"
-            autoComplete={'off'}
+            autoComplete="off"
             prefix={<IconLock />}
             onPressEnter={onSubmitClick}
           />

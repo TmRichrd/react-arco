@@ -1,9 +1,9 @@
 import axios from "axios"
 import nprogress from "nprogress"
 import "nprogress/nprogress.css"
-const url = process.env.NODE_ENV == 'development' ? 'http://192.168.0.14:8000' : 'http://admin.syang.wang/api'
+export const BaseUrl = process.env.NODE_ENV == 'development' ? 'http://192.168.0.14:8000' : 'http://admin.syang.wang/api'
 const request = axios.create({
-  baseURL: url,
+  baseURL: BaseUrl,
   timeout: 5000
 })
 // 添加请求拦截器

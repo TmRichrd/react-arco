@@ -12,6 +12,7 @@ import {
   Space,
   Select,
   InputNumber,
+  Switch,
 } from '@arco-design/web-react';
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -98,7 +99,7 @@ function SettingRoles() {
     menuRemove(ids).finally(() => fetchData(page, query));
   }
   function handleClear() {
-    fetchData(page, query);
+    fetchData(page);
   }
   async function handleEdit(id: string) {
     setType('edit');
@@ -139,6 +140,16 @@ function SettingRoles() {
 
   function renderIcon(value) {
     return value.icon ? React.createElement(IconList[value.icon]) : <span />;
+  }
+  function renderSwitch(hideStatus: number) {
+    return (
+      <Switch
+        type="round"
+        checkedIcon={<IconList.IconCheck />}
+        uncheckedIcon={<IconList.IconClose />}
+        checked={hideStatus == 1}
+      />
+    );
   }
 
   function edit(value) {
@@ -190,7 +201,7 @@ function SettingRoles() {
       );
     }
   }
-  function renderLink(){
+  function renderLink() {
     if (!showSelect) {
       return (
         <FormItem
@@ -199,10 +210,7 @@ function SettingRoles() {
           field="link"
           rules={[{ required: true }]}
         >
-          <Input
-            placeholder=""
-            autoComplete="off"
-          />
+          <Input placeholder="" autoComplete="off" />
         </FormItem>
       );
     }
@@ -235,9 +243,6 @@ function SettingRoles() {
       dataIndex: 'operations',
       render: (_col, record) => (
         <div className={style.operations}>
-          <Button type="text" size="small">
-            {locale['menu.view']}
-          </Button>
           <Button type="text" size="small" onClick={() => handleEdit(record.id)}>
             {locale['menu.edit']}
           </Button>

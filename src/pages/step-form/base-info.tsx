@@ -46,7 +46,7 @@ function BaseInfo() {
         setLineOptions(res.data || []);
         // 默认选中第一个
         if (!data.lineName && res.data.length && formRef.current) {
-          formRef.current.setFieldValue('lineName', res.data[0].value);
+          formRef.current.setFieldsValue({'lineName': res.data[0].value});
         }
       });
   };
@@ -58,7 +58,7 @@ function BaseInfo() {
   const onClusterChange = (value) => {
     const cluster = Array.isArray(value) && value[value.length - 1];
     if (formRef.current) {
-      formRef.current.setFieldValue('lineName', undefined);
+      formRef.current.setFieldsValue({'lineName': undefined});
     }
     if (cluster) {
       fetchLineOptions(cluster);

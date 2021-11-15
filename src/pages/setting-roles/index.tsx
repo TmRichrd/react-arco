@@ -34,7 +34,6 @@ function SettingRoles() {
   const locale = useLocale();
   const rolesState = useSelector((state: ReducerState) => state.roles);
   const dispatch = useDispatch();
-  const [confirmDrawerLoading,setConfirmDrawerLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [realKeys, setRealKeys] = useState([]);
   const [page, setPage] = useState({ current: 1, size: 10 });
@@ -46,12 +45,12 @@ function SettingRoles() {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const FormItem = Form.Item;
   const [checkedKeys, setCheckedKeys] = useState([]);
-  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [selectedKeys] = useState([]);
   const [treeData, setTreeData] = useState([]);
   const formRef = useRef<FormInstance>();
   const treeFormRef = useRef<FormInstance>();
   const { data, pagination, loading } = rolesState;
-  const [checkedStrategy, _setCheckedStrategy] = useState(Tree.SHOW_ALL);
+  const [checkedStrategy] = useState(Tree.SHOW_ALL);
   const formItemLayout = {
     labelCol: {
       span: 6,
@@ -181,10 +180,8 @@ function SettingRoles() {
       umsRoleMenuList,
     };
     rolesUpdate(model).then((rt) => {
-      setConfirmDrawerLoading(true)
       rt.code==200? Message.success(rt.message) : Message.error(rt.message)
     }).finally(()=>{
-      setConfirmDrawerLoading(false)
       setDrawerVisible(false)
     })
   }
@@ -274,6 +271,7 @@ function SettingRoles() {
   }, []);
   useEffect(() => {}, [treeData]);
   useEffect(() => {}, [checkedKeys]);
+  useEffect(() => {}, [query]);
   return (
     <div className={style.container}>
       <Breadcrumb style={{ marginBottom: 20 }}>
@@ -296,6 +294,8 @@ function SettingRoles() {
             <Input.Search
               style={{ width: 300, marginRight: 20 }}
               searchButton
+              onClear={()=>fetchData(page)}
+              allowClear
               placeholder={locale['roles.placeholder.roles']}
               onSearch={onSearch}
             />
@@ -377,7 +377,6 @@ function SettingRoles() {
               checkedStrategy={checkedStrategy}
               fieldNames={fieldNames}
               treeData={treeData}
-              confirmLoading={confirmDrawerLoading}
               selectedKeys={selectedKeys}
               onCheck={(value, extra) => {
                 handleCheckKeys(value, extra);
